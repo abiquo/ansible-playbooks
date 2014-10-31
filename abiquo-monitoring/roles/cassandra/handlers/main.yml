@@ -1,0 +1,5 @@
+- name: restart cassandra
+  service: name=casandra state=restarted
+
+- name: yum clean
+  command: /usr/bin/yum clean all -y

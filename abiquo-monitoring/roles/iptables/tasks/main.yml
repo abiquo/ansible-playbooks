@@ -1,0 +1,20 @@
+  - name: Check if iptables is running
+    shell: /etc/init.d/iptables status > /dev/null 2>&1 ; echo $? | grep -q "0" && echo "True"
+    register: iptables_check
+    ignore_errors: True
+
+  - name: Check if KairosDB allow access rule exists
+    when: iptables_check.stdout
+    shell: /sbin/iptables -L -n | grep "dpt:{{ iptables_kairosdb_port }}" | grep ACCEPT -q && echo "True"
+    register: kairosdb_rule_exists
+    ignore_errors: True
+
+  - name: Adding KairosDB access iptables rule
+    when: iptables_check.stdout and not kairosdb_rule_exists.stdout
+    shell: '/sbin/iptables -I INPUT -p tcp --dport {{ iptables_kairosdb_port }} -j ACCEPT'
+
+  - name: Save iptables rules
+    when: iptables_check.stdout and not kairosdb_rule_exists.stdout
+    shell: '/etc/init.d/iptables save'
+    notify:
+      - iptables restart

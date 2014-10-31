@@ -1,0 +1,4 @@
+kairosdb_rpm_url: https://github.com/kairosdb/kairosdb/releases/download/v0.9.4/kairosdb-0.9.4-6.rpm
+kairosdb_config_file_path: /opt/kairosdb/conf/kairosdb.properties
+kariosdb_cassandra_rpc_port: 9160
+kariosdb_cassandra_rpc_address: "{{ ansible_default_ipv4.address }}"
