@@ -5,7 +5,7 @@
 - name: Install KairosDB package
   yum: name={{ kairosdb_rpm_url }} state=present disable_gpg_check=yes
 
-- name: Applying Cassandra configuration template
+- name: Applying KairosDB configuration template
   template: src=kairosdb.properties.j2 dest=/opt/kairosdb/conf/kairosdb.properties
   notify:
     - restart kairosdb
