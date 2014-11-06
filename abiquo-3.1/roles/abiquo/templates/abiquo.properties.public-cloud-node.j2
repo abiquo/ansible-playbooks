@@ -1,0 +1,51 @@
+[remote-services]
+# Datacenter ID
+abiquo.datacenter.id = {{ abiquo_datacenter_id }}
+
+# Redis configuration
+abiquo.redis.port = {{ abiquo_redis_port }}
+abiquo.redis.host = {{ abiquo_redis_host }}
+
+# RabbitMQ configuration
+abiquo.rabbitmq.port = {{ abiquo_rabbitmq_port }}
+abiquo.rabbitmq.host = {{ abiquo_rabbitmq_host }}
+abiquo.rabbitmq.password = guest
+
+# Credentials encryption
+{% if abiquo_security_encrypt %}
+abiquo.security.encrypt=true
+{% endif %}
+
+# Public cloud VSM sync interval
+abiquo.vsm.vmsyncfrequency.amazon = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.rackspace-cloudservers-us = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.rackspace-cloudservers-uk = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.digitalocean = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.google-compute-engine = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.hpcloud-compute = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.elastichosts-ams-e = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.elastichosts-hkg-e = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.elastichosts-lax-p = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.elastichosts-lon-b = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.elastichosts-lon-p = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.elastichosts-sat-p = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.elastichosts-sjc-c = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.elastichosts-syd-v = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.elastichosts-tor-p = {{ abiquo_vsm_syncfrequency }}
+
+# Public cloud VSM polling interval
+abiquo.vsm.pollingfrequency.amazon = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.rackspace-cloudservers-us = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.rackspace-cloudservers-uk = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.digitalocean = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.google-compute-engine = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.hpcloud-compute = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.elastichosts-ams-e = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.elastichosts-hkg-e = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.elastichosts-lax-p = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.elastichosts-lon-b = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.elastichosts-lon-p = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.elastichosts-sat-p = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.elastichosts-sjc-c = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.elastichosts-syd-v = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.elastichosts-tor-p = {{ abiquo_vsm_pollingfrequency }}

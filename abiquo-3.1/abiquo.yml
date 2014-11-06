@@ -1,0 +1,17 @@
+---
+# This playbook deploys an Abiquo Server node. 
+
+- hosts: abiquo-server
+  user: root
+
+  roles:
+    - selinux
+    - repository
+    - { role: open-jdk, when: abiquo_java_version == "openjdk" }
+    - { role: oracle-jdk, when: abiquo_java_version == "oracle" }
+    - { role: jce, when: abiquo_security_encrypt and abiquo_java_version == "oracle" }
+    - commons
+    - { role: vmrepo-mount, when: abiquo_mount_repository }
+    - abiquo
+    - { role: https, when: abiquo_self_certificate_ssl and (abiquo_profile == "monolithic" or abiquo_profile == "api-server") }
+    - { role: iptables, when: abiquo_profile == "monolithic" or abiquo_profile == "api-server" }

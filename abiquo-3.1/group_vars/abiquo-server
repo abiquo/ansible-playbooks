@@ -1,0 +1,58 @@
+# Variables related to Abiquo software installation
+# These variables can be overriden by specifying them as parameter in the playbook run
+
+# Tomcat variables
+abiquo_tomcat_http_port: 8009
+abiquo_tomcat_ajp_port: 8010
+abiquo_tomcat_https_port: 8443
+
+# Apache variables
+abiquo_http_port: 80
+abiquo_http_protocol: http
+abiquo_https_port: 443
+abiquo_https_protocol: https
+abiquo_ssl_certs_path: /etc/httpd/certs
+
+# Abiquo extra-vars default values
+abiquo_profile: monolithic
+abiquo_self_certificate_ssl: true
+abiquo_rabbitmq_host: 127.0.0.1
+abiquo_rabbitmq_port: 5672
+abiquo_redis_host: 127.0.0.1
+abiquo_redis_port: 6379
+abiquo_api_url: http://change-me/api
+abiquo_datacenter_id: Abiquo
+abiquo_security_encrypt: true
+abiquo_vsm_syncfrequency: 60000
+abiquo_vsm_pollingfrequency: 60000
+abiquo_m_identity: admin
+abiquo_m_password: xabiquo
+abiquo_am_local_repository_path: /opt/vm_repository
+abiquo_am_remote_tepository_path: 127.0.0.1:/opt/vm_repository
+abiquo_encryption_seed: change_E8LphiJmbMbZgOyB_me
+abiquo_devel: false
+
+# Playbook requirements
+# Use DNS name to setup API end-point - Values: true | false
+abiquo_dns_name: false
+
+# java_version - Values: openjdk | oracle 
+abiquo_java_version: oracle
+
+# OpenJDK Java version
+abiquo_openjdk_package: java-1.7.0-openjdk
+
+# Abiquo yum repository - Values: public | internal
+abiquo_repository: public
+abiquo_repository_gpg_check: true
+
+# Abiquo vm_repository NFS mount - Values: true | false
+abiquo_mount_repository: false
+
+# Oracle Java version
+abiquo_jdk_download_url: http://download.oracle.com/otn-pub/java/jdk/7u67-b01/jdk-7u67-linux-x64.tar.gz
+abiquo_jdk_download_filename: jdk-7u67-linux-x64.tar.gz
+abiquo_jce_download_url: http://download.oracle.com/otn-pub/java/jce/7/UnlimitedJCEPolicyJDK7.zip
+abiquo_jce_download_filename: UnlimitedJCEPolicyJDK7.zip
+abiquo_java_path: /usr/lib/jvm/
+abiquo_java_folder: jdk1.7.0_67

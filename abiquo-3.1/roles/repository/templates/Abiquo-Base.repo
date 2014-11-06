@@ -1,0 +1,15 @@
+# Abiquo-3.1-Base.repo
+[abiquo-base]
+name=abiquo-base-3.1
+{% if abiquo_repository == "internal" %}
+baseurl=http://mirror.bcn.abiquo.com/abiquo/3.1/os/x86_64/
+{% else %}
+baseurl=http://mirror.abiquo.com/abiquo/3.1/os/x86_64/
+{% endif %}
+enabled=1
+{% if abiquo_repository_gpg_check %}
+gpgcheck=1
+{% else %}
+gpgcheck=0
+{% end %}
+priority=0

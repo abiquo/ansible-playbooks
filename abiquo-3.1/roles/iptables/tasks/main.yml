@@ -1,0 +1,32 @@
+  - name: Check if iptables is running
+    shell: /etc/init.d/iptables status > /dev/null 2>&1 ; echo $? | grep -q "0" && echo "True"
+    register: iptables_check
+    ignore_errors: True
+
+  - name: Check if HTTP allow access rule exists
+    when: iptables_check.stdout
+    shell: /sbin/iptables -L | grep "dpt:{{ abiquo_http_protocol }}" | grep -v "{{ abiquo_https_protocol }}" | grep ACCEPT -q && echo "True"
+    register: http_rule_exists
+    ignore_errors: True
+
+  - name: Adding HTTP access iptables rule
+    when: iptables_check.stdout and not http_rule_exists.stdout
+    shell: '/sbin/iptables -I INPUT -p tcp --dport {{ abiquo_http_protocol }} -m state --state NEW,ESTABLISHED -j ACCEPT'
+
+  - name: Check if HTTPS allow access rule exists
+    when: iptables_check.stdout and abiquo_self_certificate_ssl
+    shell: /sbin/iptables -L | grep "dpt:{{ abiquo_https_protocol }}" | grep ACCEPT -q && echo "True"
+    register: https_rule_exists
+    ignore_errors: True
+
+  - name: Adding HTTPS access iptables rule
+    when: abiquo_self_certificate_ssl and iptables_check.stdout and not https_rule_exists.stdout
+    shell: '/sbin/iptables -I INPUT -p tcp --dport {{ abiquo_https_protocol }} -m state --state NEW,ESTABLISHED -j ACCEPT'
+
+  - name: Save iptables rules
+    when: iptables_check.stdout and (not http_rule_exists.stdout or (abiquo_self_certificate_ssl and not https_rule_exists))
+    shell: '/etc/init.d/iptables save'
+ 
+  - name: Restart iptables to load changes
+    when: iptables_check.stdout and (not http_rule_exists.stdout or (abiquo_self_certificate_ssl and not https_rule_exists))
+    service: name=iptables state=restarted

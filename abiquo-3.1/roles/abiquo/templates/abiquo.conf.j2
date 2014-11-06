@@ -1,0 +1,24 @@
+<VirtualHost *:{{ abiquo_http_port }}>
+    RewriteEngine On
+    ProxyRequests Off
+    ProxyPreserveHost On
+ 
+    <Directory "/var/www/html/ui">
+        Options MultiViews
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+    RewriteRule ^/$ /ui/ [R]
+ 
+    <Location /api>
+        ProxyPass ajp://localhost:{{ abiquo_tomcat_ajp_port }}/api
+        ProxyPassReverse ajp://localhost:{{ abiquo_tomcat_ajp_port }}/api
+    </Location>
+ 
+    <Location /legal>
+        ProxyPass ajp://localhost:{{ abiquo_tomcat_ajp_port }}/legal
+        ProxyPassReverse ajp://localhost:{{ abiquo_tomcat_ajp_port }}/legal
+    </Location>
+ 
+</VirtualHost>

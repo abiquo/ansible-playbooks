@@ -1,0 +1,81 @@
+[server]
+# Abiquo session
+abiquo.auth.module = abiquo
+abiquo.server.sessionTimeout = 60
+
+## Abiquo API location
+abiquo.server.api.location = {{ abiquo_http_protocol }}://{{ ansible_default_ipv4.address }}:{{ abiquo_tomcat_http_port  }}/api
+
+# Credentials encryption
+{% if abiquo_security_encrypt %}
+abiquo.security.encrypt=true
+{% endif %}
+
+# Redis configuration
+abiquo.redis.port = {{ abiquo_redis_port }}
+abiquo.redis.host = {{ abiquo_redis_host }}
+
+# RabbitMQ configuration
+abiquo.rabbitmq.port = {{ abiquo_rabbitmq_port }}
+abiquo.rabbitmq.host = {{ abiquo_rabbitmq_host }}
+abiquo.rabbitmq.password = guest
+
+# Mail server default configuration
+abiquo.server.mail.server = 127.0.0.1
+abiquo.server.mail.password = none
+abiquo.server.mail.user = none@none.es
+
+# M identity credentials
+abiquo.m.identity=admin
+abiquo.m.credential=xabiquo
+
+[remote-services]
+# Datacenter ID
+abiquo.datacenter.id = {{ abiquo_datacenter_id }}
+
+# VM repository path
+abiquo.appliancemanager.localRepositoryPath = {{ abiquo_am_local_repository_path }}
+abiquo.appliancemanager.repositoryLocation = {{ abiquo_am_remote_tepository_path }}
+
+# Public cloud VSM sync interval
+abiquo.vsm.vmsyncfrequency.amazon = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.rackspace-cloudservers-us = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.rackspace-cloudservers-uk = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.digitalocean = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.google-compute-engine = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.hpcloud-compute = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.elastichosts-ams-e = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.elastichosts-hkg-e = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.elastichosts-lax-p = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.elastichosts-lon-b = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.elastichosts-lon-p = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.elastichosts-sat-p = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.elastichosts-sjc-c = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.elastichosts-syd-v = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.elastichosts-tor-p = {{ abiquo_vsm_syncfrequency }}
+
+# Public cloud VSM polling interval
+abiquo.vsm.pollingfrequency.amazon = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.rackspace-cloudservers-us = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.rackspace-cloudservers-uk = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.digitalocean = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.google-compute-engine = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.hpcloud-compute = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.elastichosts-ams-e = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.elastichosts-hkg-e = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.elastichosts-lax-p = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.elastichosts-lon-b = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.elastichosts-lon-p = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.elastichosts-sat-p = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.elastichosts-sjc-c = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.elastichosts-syd-v = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.elastichosts-tor-p = {{ abiquo_vsm_pollingfrequency }}
+
+# DEVEL common properties
+{% if abiquo_devel %}
+am.conversions.skip = true
+abiquo.virtualfactory.kvm.fullVirt = false
+abiquo.dvs.vcenter.user = root
+abiquo.dvs.vcenter.password = vmware
+{% endif %}
+

@@ -1,0 +1,21 @@
+  - name: Install Apache2 mod_ssl
+    yum: name=mod_ssl state=present
+
+# SOURCE: http://serialized.net/2013/04/simply-generating-self-signed-ssl-certs-with-ansible/
+  - name: Create self-signed SSL cert
+    command: openssl req -new -nodes -x509 -subj "/C=ES/ST=Catalunya/L=Barcelona/O=Abiquo/CN={{ ansible_nodename }}" -days 3650 -keyout /etc/pki/tls/private/{{ ansible_nodename }}.key -out /etc/pki/tls/certs/{{ ansible_nodename }}.crt -extensions v3_ca creates=/etc/pki/tls/certs/{{ ansible_nodename }}.crt
+
+  - name: Configure client-config.json API SSL endpoint with DNS hostname
+    when:  abiquo_dns_name
+    lineinfile: "dest=/var/www/html/ui/config/client-config.json state=present regexp='\"config.endpoint\"' line='    \"config.endpoint\": \"{{ abiquo_https_protocol }}://{{ ansible_nodename }}/api\",'"
+
+  - name: Configure client-config.json API SSL endpoint with host IP
+    when:  not abiquo_dns_name
+    lineinfile: "dest=/var/www/html/ui/config/client-config.json state=present regexp='\"config.endpoint\"' line='    \"config.endpoint\": \"{{ abiquo_https_protocol }}://{{ ansible_default_ipv4.address }}/api\",'"
+
+  - name: Apply Apache SSL ssl.conf Template
+    template: src=ssl.conf.j2 dest=/etc/httpd/conf.d/ssl.conf
+
+  - name: Apply Apache SSL abiquo.conf site Template
+    template: src=abiquo.conf.j2 dest=/etc/httpd/conf.d/abiquo.conf
+    notify: restart httpd
