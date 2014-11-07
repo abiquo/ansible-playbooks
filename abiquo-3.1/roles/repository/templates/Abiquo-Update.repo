@@ -11,5 +11,5 @@ enabled=1
 gpgcheck=1
 {% else %}
 gpgcheck=0
-{% end %}
+{% endif %}
 priority=0
