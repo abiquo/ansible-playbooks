@@ -13,4 +13,4 @@
     file: path={{ abiquo_java_path }}{{ abiquo_java_folder }}/jre/lib/security state=directory
 
   - name: Extract Oracle Java 1.7 JCE to destination path
-    command: unzip -u -j /tmp/{{ abiquo_jce_download_filename }} -d {{ abiquo_java_path }}{{ abiquo_java_folder }}/jre/lib/security
+    command: unzip -jo /tmp/{{ abiquo_jce_download_filename }} -d {{ abiquo_java_path }}{{ abiquo_java_folder }}/jre/lib/security
