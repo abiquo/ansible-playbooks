@@ -50,9 +50,8 @@ abiquo_repository_gpg_check: true
 abiquo_mount_repository: false
 
 # Oracle Java version
-abiquo_jdk_download_url: http://download.oracle.com/otn-pub/java/jdk/7u67-b01/jdk-7u67-linux-x64.tar.gz
-abiquo_jdk_download_filename: jdk-7u67-linux-x64.tar.gz
+abiquo_jdk_download_url: http://download.oracle.com/otn-pub/java/jdk/7u71-b14/jdk-7u71-linux-x64.rpm
 abiquo_jce_download_url: http://download.oracle.com/otn-pub/java/jce/7/UnlimitedJCEPolicyJDK7.zip
 abiquo_jce_download_filename: UnlimitedJCEPolicyJDK7.zip
-abiquo_java_path: /usr/lib/jvm/
-abiquo_java_folder: jdk1.7.0_67
+abiquo_jdk_download_filename: jdk-7u71-linux-x64.rpm
+

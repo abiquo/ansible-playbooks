@@ -2,38 +2,9 @@
   - name: Install wget package
     yum: name=wget state=present
 
-# SOURCE: https://github.com/pjan/the-ansibles/blob/master/roles/jdk/tasks/main.yml
-# Oracle Java 1.8 JDK
+# Oracle Java 1.7 JDK
   - name: Download Oracle Java 1.7 JDK package from Oracle web site
     command: wget --no-cookies --header 'Cookie:gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie' chdir=/tmp creates=/tmp/{{ abiquo_jdk_download_filename }} {{ abiquo_jdk_download_url }}
 
-  - name: Create Oracle Java 1.7 folder
-    file: path={{ abiquo_java_path }} state=directory
-
-  - name: Extract Oracle Java 1.7 package
-    command: tar -xvzf /tmp/{{ abiquo_jdk_download_filename }} chdir={{ abiquo_java_path }}
-
-  - name: Add the JAVA_HOME to the system path (/etc/profile)
-    lineinfile: dest=/etc/profile regexp="^JAVA_HOME={{ abiquo_java_path }}{{ abiquo_java_folder }}" line="JAVA_HOME={{ abiquo_java_path }}{{ abiquo_java_folder }}" state=present
-
-  # TO-DO : Create JAVA_HOME environment variable
-
-  - name: Inform the system where Oracle JDK is located
-    command: "{{ item }}"
-    with_items:
-      - update-alternatives --install "/usr/bin/java" "java" "{{ abiquo_java_path }}{{ abiquo_java_folder }}/bin/java" 1
-      - update-alternatives --install "/usr/bin/javac" "javac" "{{ abiquo_java_path }}{{ abiquo_java_folder }}/bin/javac" 1
-      - update-alternatives --install "/usr/bin/javaws" "javaws" "{{ abiquo_java_path }}{{ abiquo_java_folder }}/bin/javaws" 1
-      - update-alternatives --install "/usr/bin/javah" "javah" "{{ abiquo_java_path }}{{ abiquo_java_folder }}/bin/javah" 1
-      - update-alternatives --install "/usr/bin/jar" "jar" "{{ abiquo_java_path }}{{ abiquo_java_folder }}/bin/jar" 1
-      - update-alternatives --install "/usr/bin/jinfo" "jinfo" "{{ abiquo_java_path }}{{ abiquo_java_folder }}/bin/jinfo" 1
-
-  - name: Inform the system that Oracle JDK must be the default
-    command: "{{ item }}"
-    with_items:
-      - update-alternatives --set java {{ abiquo_java_path }}{{ abiquo_java_folder }}/bin/java
-      - update-alternatives --set javac {{ abiquo_java_path }}{{ abiquo_java_folder }}/bin/javac
-      - update-alternatives --set javaws {{ abiquo_java_path }}{{ abiquo_java_folder }}/bin/javaws
-      - update-alternatives --set javah {{ abiquo_java_path }}{{ abiquo_java_folder }}/bin/javah
-      - update-alternatives --set jar {{ abiquo_java_path }}{{ abiquo_java_folder }}/bin/jar
-      - update-alternatives --set jinfo {{ abiquo_java_path }}{{ abiquo_java_folder }}/bin/jinfo
+  - name: Install Oracle Java 1.7 rpm
+    yum: name=/tmp/{{ abiquo_jdk_download_filename }} state=present
