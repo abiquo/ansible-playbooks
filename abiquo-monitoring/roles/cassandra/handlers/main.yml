@@ -1,5 +1,5 @@
 - name: restart cassandra
-  command: /etc/init.d/cassandra restar
+  command: /etc/init.d/cassandra restart
 #  Service seems to fail running locally
 #  service: name=casandra state=restarted
 
