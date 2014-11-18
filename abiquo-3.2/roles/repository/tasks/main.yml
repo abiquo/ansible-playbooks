@@ -1,0 +1,19 @@
+  - name: Import Abiquo PGP repository key
+    rpm_key: state=present key=http://mirror.abiquo.com/RPM-GPG-KEY-Abiquo
+
+  - name: Import MariaDB PGP repository key
+    when: abiquo_profile == "monolithic" or abiquo_profile == "api-server"
+    rpm_key: state=present key=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+
+  - name: Import RabbitMQ PGP repository key
+    when: abiquo_profile == "monolithic" or abiquo_profile == "api-server"
+    rpm_key: state=present key=http://www.rabbitmq.com/rabbitmq-signing-key-public.asc
+
+  - name: Copy Abiquo-Base repo file
+    template: src=Abiquo-Base.repo dest=/etc/yum.repos.d/
+
+  - name: Copy Abiquo-Update repo file
+    template: src=Abiquo-Update.repo dest=/etc/yum.repos.d/
+
+  - name: Yum clean
+    command: /usr/bin/yum clean all -y

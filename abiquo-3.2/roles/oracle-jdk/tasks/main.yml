@@ -1,0 +1,10 @@
+# Install wget requirement
+  - name: Install wget package
+    yum: name=wget state=present
+
+# Oracle Java 1.8 JDK
+  - name: Download Oracle Java 1.8 JDK package from Oracle web site
+    command: wget --no-cookies --header 'Cookie:gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie' chdir=/tmp creates=/tmp/{{ abiquo_jdk_download_filename }} {{ abiquo_jdk_download_url }}
+
+  - name: Install Oracle Java 1.8 rpm
+    yum: name=/tmp/{{ abiquo_jdk_download_filename }} state=present

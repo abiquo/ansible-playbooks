@@ -1,0 +1,3 @@
+# Install OpenJDK package
+  - name: Install OpenJDK package
+    yum: name={{ abiquo_openjdk_package }} state=present

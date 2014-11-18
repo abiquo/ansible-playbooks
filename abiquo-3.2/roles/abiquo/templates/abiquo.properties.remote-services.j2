@@ -1,0 +1,35 @@
+[remote-services]
+
+## Abiquo API location
+abiquo.server.api.location = {{ abiquo_api_url }}
+
+# Credentials encryption
+{% if abiquo_security_encrypt %}
+abiquo.security.encrypt=true
+{% endif %}
+
+# Redis configuration
+abiquo.redis.port = {{ abiquo_redis_port }}
+abiquo.redis.host = {{ abiquo_redis_host }}
+
+# RabbitMQ configuration
+abiquo.rabbitmq.port = {{ abiquo_rabbitmq_port }}
+abiquo.rabbitmq.host = {{ abiquo_rabbitmq_host }}
+abiquo.rabbitmq.password = guest
+
+[remote-services]
+# Datacenter ID
+abiquo.datacenter.id = {{ abiquo_datacenter_id }}
+
+# VM repository path
+abiquo.appliancemanager.localRepositoryPath = {{ abiquo_am_local_repository_path }}
+abiquo.appliancemanager.repositoryLocation = {{ abiquo_am_remote_tepository_path }}
+
+# DEVEL common properties
+{% if abiquo_devel %}
+am.conversions.skip = true
+abiquo.virtualfactory.kvm.fullVirt = false
+abiquo.dvs.vcenter.user = root
+abiquo.dvs.vcenter.password = vmware
+{% endif %}
+

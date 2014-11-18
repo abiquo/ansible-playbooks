@@ -1,0 +1,115 @@
+  - name: Install Abiquo packages for a Monolithic server
+    when: abiquo_profile == "monolithic"
+    yum: name={{ item }} state=present
+    with_items:
+      - abiquo-core
+      - abiquo-api
+      - abiquo-am
+      - abiquo-cpp
+      - abiquo-m
+      - abiquo-nodecollector
+      - abiquo-remote-services
+      - abiquo-server
+      - abiquo-sosreport-plugins
+      - abiquo-ssm
+      - abiquo-ui
+      - abiquo-v2v
+      - abiquo-virtualfactory
+      - abiquo-vsm
+
+  - name: Install Abiquo packages for an API server
+    when: abiquo_profile == "api-server"
+    yum: name={{ item }} state=present
+    with_items:
+      - abiquo-core
+      - abiquo-api
+      - abiquo-m
+      - abiquo-server
+      - abiquo-sosreport-plugins
+      - abiquo-ui
+
+  - name: Install Abiquo packages for a Public Cloud node server
+    when: abiquo_profile == "public-cloud-node"
+    yum: name={{ item }} state=present
+    with_items:
+      - abiquo-cpp
+      - abiquo-nodecollector
+      - abiquo-sosreport-plugins
+      - abiquo-virtualfactory
+      - abiquo-vsm
+
+  - name: Install Abiquo packages for a Remote Services node server
+    when: abiquo_profile == "remote-services"
+    yum: name={{ item }} state=present
+    with_items:
+      - abiquo-am
+      - abiquo-nodecollector
+      - abiquo-remote-services
+      - abiquo-sosreport-plugins
+      - abiquo-ssm
+      - abiquo-v2v
+      - abiquo-virtualfactory
+      - abiquo-vsm
+
+  - name: Install Abiquo packages for a V2V node server
+    when: abiquo_profile == "v2v"
+    yum: name={{ item }} state=present
+    with_items:
+      - abiquo-sosreport-plugins
+      - abiquo-v2v
+
+  - name: Create encryption default folder
+    when: abiquo_security_encrypt
+    file: path=/etc/abiquo state=directory
+
+  - name: Create encryption seed file
+    when: abiquo_security_encrypt
+    template: src=store.j2 dest=/etc/abiquo/.store
+
+  - name: Ensure abiquo/config folder exists
+    file: path=/opt/abiquo/config state=directory
+
+  - name: Apply abiquo.properties Template
+    template: src=abiquo.properties.{{ abiquo_profile }}.j2 dest=/opt/abiquo/config/abiquo.properties
+
+  - name: Apply Tomcat server.xml Template
+    template: src=server.xml.j2 dest=/opt/abiquo/tomcat/conf/server.xml
+
+  - name: Apply abiquo-tomcat Template
+    template: src=abiquo-tomcat.j2 dest=/etc/init.d/abiquo-tomcat
+
+  - name: Check if kinton database already exists
+    when: abiquo_profile == "monolithic" or abiquo_profile == "api-server"
+    shell: /usr/bin/mysql -e "show databases" | grep -q "kinton" && echo "False"
+    register: result
+    ignore_errors: True
+
+  - name: Create kinton database
+    when: (abiquo_profile == "monolithic" or abiquo_profile == "api-server") and result|failed
+    shell: /usr/bin/mysql -e "create database kinton"
+
+  - name: Import kinton database schema
+    when: (abiquo_profile == "monolithic" or abiquo_profile == "api-server") and result|failed
+    shell: /usr/bin/mysql kinton < /usr/share/doc/abiquo-server/database/kinton-schema.sql
+
+  - name: Configure client-config.json API endpoint
+    when: abiquo_profile == "monolithic" or abiquo_profile == "api-server" 
+    lineinfile: "dest=/var/www/html/ui/config/client-config.json state=present regexp='\"config.endpoint\"' line='    \"config.endpoint\": \"{{ abiquo_http_protocol }}://{{ ansible_default_ipv4.address }}/api\",'"
+
+  - name: Clean Apache default configuration
+    when: abiquo_profile == "monolithic" or abiquo_profile == "api-server"
+    shell: rm -rf /etc/httpd/conf.d/*
+    ignore_errors: True
+
+  - name: Apply Apache abiquo.conf site Template
+    when: abiquo_profile == "monolithic" or abiquo_profile == "api-server"
+    template: src=abiquo.conf.j2 dest=/etc/httpd/conf.d/abiquo.conf
+    notify: restart httpd
+
+  - name: Set adequate JAVA_PATH to abiqup-tomcat init script
+    when: abiquo_java_version == "openjdk"
+    lineinfile: "dest=/etc/init.d/abiquo-tomcat state=present regexp='export JAVA_HOME=' line='export JAVA_HOME=\"/usr/lib/jvm/jre-openjdk\"'"
+
+  - name: Start abiquo-tomcat Server at system startup
+    service: name=abiquo-tomcat state=started enabled=yes pattern=tomcat
+

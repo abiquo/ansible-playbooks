@@ -1,0 +1,15 @@
+# Abiquo-3.2-Update.repo
+[abiquo-updates]
+name=abiquo-update-3.2
+{% if abiquo_repository == "internal" %}
+baseurl=http://mirror.bcn.abiquo.com/abiquo/3.2/updates/x86_64/
+{% else %}
+baseurl=http://mirror.abiquo.com/abiquo/3.2/updates/x86_64/
+{% endif %}
+enabled=1
+{% if abiquo_repository_gpg_check %}
+gpgcheck=1
+{% else %}
+gpgcheck=0
+{% endif %}
+priority=0

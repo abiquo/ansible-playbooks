@@ -1,0 +1,111 @@
+#!/bin/bash
+#
+# abiquo-tomcat        
+#
+# chkconfig: 2345 99 99
+# description: 	Tomcat servlet engine.
+#
+# Make sure there is a valid user "tomcat" and that this user has rw permissions 
+# in the $CATALINA_HOME/conf and $CATALINA_HOME/logs directories. 
+# Also make sure that $JAVA_HOME is set. You will start Tomcat as user "tomcat" 
+# to avoid running it as root. The Apache server is started as root because it 
+# uses port 80 (lower than 1024) but it spawns processes that run as "nobody". 
+
+# Source function library.
+. /etc/init.d/functions
+
+
+RETVAL=$?
+export CATALINA_HOME="/opt/abiquo/tomcat"
+export CATALINA_BASE="/opt/abiquo/tomcat"
+export CATALINA_PID="$CATALINA_BASE/work/catalina.pid"
+export JAVA_HOME="/usr/java/default/"
+
+export TUSER="root"
+export PATH=$PATH:/usr/local/bin
+export JAVA_OPTS=" -server -Xms1024m -Xmx1500m -XX:MaxPermSize=512m -XX:+CMSClassUnloadingEnabled -Djava.awt.headless=true "
+export CATALINA_OPTS="$CATALINA_OPTS -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true"
+
+if ! [ -x $JAVA_HOME/bin/java ]; then
+  echo
+  echo "Java not found in $JAVA_HOME. Install OpenJDK or Oracle JDK for Linux x64."
+  echo
+  exit 1
+fi
+
+if [ -f /selinux/enforce ] && [ "1" == `cat /selinux/enforce` ]; then
+  echo
+  echo "SELinux is enabled. Disable it permanently and reboot the server."
+  echo
+  exit 1
+fi
+
+if [ -z `grep -l $TUSER /etc/passwd` ]; then
+	echo "$TUSER user does not exit. Create it first"	
+	exit 1
+fi
+
+start_tomcat(){
+
+	# remove pidfile if tomcat not running
+	if [ -f $CATALINA_PID ]; then
+        	PID=`cat $CATALINA_PID`
+        	if [ -z "`ps h $PID`" ]; then
+			rm -f $CATALINA_PID
+        	fi
+	fi
+
+        if [ -f $CATALINA_HOME/bin/startup.sh ];
+          then
+	    echo $"Starting tomcat"
+            /bin/su $TUSER $CATALINA_HOME/bin/startup.sh
+        fi
+}
+stop_tomcat(){
+        if [ -f $CATALINA_HOME/bin/shutdown.sh ];
+          then
+	    echo $"Stopping tomcat"
+            /bin/su $TUSER -c "$CATALINA_HOME/bin/shutdown.sh -force"
+        fi
+}
+
+enable_jpda(){
+    echo $"Enabling JPDA debugger" 
+    export JPDA_TRANSPORT="dt_socket"
+    export JPDA_ADDRESS="8000"
+    export JPDA_SUSPEND="n"
+    export JPDA_OPTS="-agentlib:jdwp=transport=$JPDA_TRANSPORT,address=$JPDA_ADDRESS,server=y,suspend=$JPDA_SUSPEND"
+    export CATALINA_OPTS="$CATALINA_OPTS $JPDA_OPTS"
+}
+
+case "$1" in
+ start)
+	start_tomcat
+    RETVAL=$?
+	;;
+ stop)
+	stop_tomcat
+    RETVAL=$?
+ 	;;
+ restart)
+	stop_tomcat
+	start_tomcat	
+    RETVAL=$?
+	;;
+ jpda)
+	enable_jpda	
+	start_tomcat
+    RETVAL=$?
+	;;
+ status)
+	status -p $CATALINA_PID abiquo-tomcat
+    RETVAL=$?
+	;;
+ *)
+ 	echo $"Usage: $0 {start|stop|jpda|status}"
+	exit 1
+	;;
+esac
+
+exit $RETVAL
+

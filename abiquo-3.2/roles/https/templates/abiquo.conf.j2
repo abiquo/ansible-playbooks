@@ -1,0 +1,44 @@
+<VirtualHost *:{{ abiquo_http_port }}>
+    RewriteEngine On
+    RewriteRule .* {{ abiquo_https_protocol }}://%{SERVER_NAME}%{REQUEST_URI} [L,R=301]
+</VirtualHost>
+
+<VirtualHost *:{{ abiquo_https_port }}>
+    RewriteEngine On
+    ProxyRequests Off
+    ProxyPreserveHost On
+ 
+    <Directory "/var/www/html/ui">
+        Options MultiViews
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+    RewriteRule ^/$ /ui/ [R]
+ 
+    <Location /api>
+        ProxyPass ajp://localhost:{{ abiquo_tomcat_ajp_port }}/api
+        ProxyPassReverse ajp://localhost:{{ abiquo_tomcat_ajp_port }}/api
+    </Location>
+
+    <Location /m>
+        ProxyPass ajp://localhost:{{ abiquo_tomcat_ajp_port }}/m
+        ProxyPassReverse ajp://localhost:{{ abiquo_tomcat_ajp_port }}/m
+    </Location>
+
+    <Location /am>
+        ProxyPass ajp://localhost:{{ abiquo_tomcat_ajp_port }}/am
+        ProxyPassReverse ajp://localhost:{{ abiquo_tomcat_ajp_port }}/am
+    </Location>
+ 
+    <Location /legal>
+        ProxyPass ajp://localhost:{{ abiquo_tomcat_ajp_port }}/legal
+        ProxyPassReverse ajp://localhost:{{ abiquo_tomcat_ajp_port }}/legal
+    </Location>
+
+    SSLEngine on
+    SSLProtocol all -SSLv2
+    SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM:+LOW
+    SSLCertificateFile /etc/pki/tls/certs/{{ ansible_fqdn }}.crt
+    SSLCertificateKeyFile /etc/pki/tls/private/{{ ansible_fqdn }}.key  
+</VirtualHost>

@@ -1,0 +1,13 @@
+# Install curl and unzip requirements
+  - name: Install curl and unzip packages
+    yum: name={{ item }} state=present
+    with_items:
+      - curl
+      - unzip
+
+# Oracle Java 1.8 JCE (Java Cryptography Extension)
+  - name: Download Oracle Java 1.8 JCE package from Oracle web site
+    command: curl -L --cookie 'oraclelicense=accept-securebackup-cookie;' {{ abiquo_jce_download_url }} -o {{ abiquo_jce_download_filename }} chdir=/tmp
+
+  - name: Extract Oracle Java 1.8 JCE to destination path
+    command: unzip -jo /tmp/{{ abiquo_jce_download_filename }} -d /usr/java/default/jre/lib/security/
