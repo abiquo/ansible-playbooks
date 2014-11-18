@@ -1,0 +1,18 @@
+# Variables related to Abiquo KVM node installation
+# These variables can be overriden by specifying them as parameter in the playbook run
+
+# Abiquo extra-vars default values
+
+abiquo_kvm_mount_repository: false
+abiquo_kvm_local_repository_path: /opt/vm_repository
+abiquo_kvm_remote_repository_path: 127.0.0.1:/opt/vm_repository
+abiquo_kvm_configure_iptables: true
+abiquo_kvm_vnc_ip: "{{ ansible_default_ipv4.address }}"
+abiquo_kvm_admin_ip: "{{ ansible_default_ipv4.address }}"
+abiquo_kvm_vnc_minport: 5900
+abiquo_kvm_vnc_maxport: 5960
+abiquo_kvm_aim_port: 8889
+
+abiquo_kvm_repository: public
+abiquo_kvm_repository_gpg_check: true
+

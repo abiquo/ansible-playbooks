@@ -1,0 +1,11 @@
+  - name: Import Abiquo PGP repository key
+    rpm_key: state=present key=http://mirror.abiquo.com/RPM-GPG-KEY-Abiquo
+
+  - name: Copy Abiquo-Base repo file
+    template: src=Abiquo-Base.repo dest=/etc/yum.repos.d/
+
+  - name: Copy Abiquo-Update repo file
+    template: src=Abiquo-Update.repo dest=/etc/yum.repos.d/
+
+  - name: Yum clean
+    command: /usr/bin/yum clean all -y

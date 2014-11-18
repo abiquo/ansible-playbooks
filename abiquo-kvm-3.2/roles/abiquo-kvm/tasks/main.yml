@@ -1,0 +1,14 @@
+  - name: Install Abiquo KVM required packages
+    yum: name={{ item }} state=present
+    with_items:
+      - abiquo-cloud-node
+      - qemu-kvm.x86_64
+
+  - name: Create qemu-kvm symlink
+    file: src=/usr/bin/qemu-kvm dest=/usr/bin/qemu-system-x86_64 state=link
+
+  - name: Configure abiquo-aim.ini
+    template: src=abiquo-aim.ini.j2 dest=/etc/abiquo-aim.ini
+
+  - name: Start abiquo-aim service at system startup
+    service: name=abiquo-aim state=started enabled=yes pattern=aim

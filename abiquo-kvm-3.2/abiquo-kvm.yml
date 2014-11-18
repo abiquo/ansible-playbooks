@@ -1,0 +1,13 @@
+---
+# This playbook deploys an Abiquo KVM Server node. 
+
+- hosts: abiquo-kvm
+  user: root
+
+  roles:
+    - selinux
+    - repository
+    - { role: vmrepo-mount, when: abiquo_kvm_mount_repository }
+    - abiquo-kvm
+# TO-DO : Configure IP tables accordingly    
+#    - { role: iptables, when: abiquo_kvm_configure_iptables }

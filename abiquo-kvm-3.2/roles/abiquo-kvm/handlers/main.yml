@@ -1,0 +1,2 @@
+    - name: restart abiquo-aim
+      service: name=abiquo-aim state=restarted

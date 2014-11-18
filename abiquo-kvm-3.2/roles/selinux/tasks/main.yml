@@ -1,0 +1,9 @@
+---
+- name: Download EPEL Repo
+  get_url: url=http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm dest=/tmp/epel-release-6-8.noarch.rpm
+
+- name: Install EPEL Repo
+  yum: name=/tmp/epel-release-6-8.noarch.rpm state=present
+
+- name: Install libselinux-python
+  yum: name=libselinux-python state=present
