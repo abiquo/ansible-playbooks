@@ -15,4 +15,4 @@
     file: path={{ abiquo_am_local_repository_path }} state=directory
 
   - name: Mount vm_repository share
-    mount: name={{ abiquo_am_local_repository_path }} src={{ abiquo_am_remote_tepository_path }} fstype=nfs opts=defaults state=mounted
+    mount: name={{ abiquo_am_local_repository_path }} src={{ abiquo_am_remote_repository_path }} fstype=nfs opts=defaults state=mounted

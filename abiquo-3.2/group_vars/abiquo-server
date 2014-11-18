@@ -28,7 +28,7 @@ abiquo_vsm_pollingfrequency: 60000
 abiquo_m_identity: admin
 abiquo_m_password: xabiquo
 abiquo_am_local_repository_path: /opt/vm_repository
-abiquo_am_remote_tepository_path: 127.0.0.1:/opt/vm_repository
+abiquo_am_remote_repository_path: 127.0.0.1:/opt/vm_repository
 abiquo_encryption_seed: change_E8LphiJmbMbZgOyB_me
 abiquo_devel: false
 
