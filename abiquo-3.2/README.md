@@ -6,7 +6,7 @@
 - You may need to give access through ssh and setup selinux and iptables accordingly
 
 Oracle license disclaimer
-	This playbook installs Oracle JDK 1.7 and Oracle JCE (Java Cryphtography Extension) 1.7
+	This playbook installs Oracle JDK 1.8 and Oracle JCE (Java Cryphtography Extension) 1.8
 	Is up to you change jdk playbook role to install OpenJDK instead.
 	If you install this playbook with default Oracle JDK and JCE versions, you are accepting
 	Oracle license agreement:
