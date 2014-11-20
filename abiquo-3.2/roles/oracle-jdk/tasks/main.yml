@@ -8,3 +8,9 @@
 
   - name: Install Oracle Java 1.8 rpm
     yum: name=/tmp/{{ abiquo_jdk_download_filename }} state=present
+
+  - name: Create liquibase required folders
+    file: path=/usr/{{ item }}/java-1.8.0 state=directory
+    with_items:
+      - share
+      - lib
