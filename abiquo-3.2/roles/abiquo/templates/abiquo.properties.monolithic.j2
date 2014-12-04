@@ -8,7 +8,7 @@ abiquo.server.api.location = {{ abiquo_http_protocol }}://{{ ansible_default_ipv
 
 # Credentials encryption
 {% if abiquo_security_encrypt %}
-abiquo.security.encrypt=true
+abiquo.security.encrypt = true
 {% endif %}
 
 # Redis configuration
@@ -26,8 +26,8 @@ abiquo.server.mail.password = none
 abiquo.server.mail.user = none@none.es
 
 # M identity credentials
-abiquo.m.identity=admin
-abiquo.m.credential=xabiquo
+abiquo.m.identity = default_outbound_api_user
+abiquo.m.credential = {{ abiquo_default_outbound_api_user_password.stdout }}
 
 [remote-services]
 # Datacenter ID
@@ -38,7 +38,8 @@ abiquo.appliancemanager.localRepositoryPath = {{ abiquo_am_local_repository_path
 abiquo.appliancemanager.repositoryLocation = {{ abiquo_am_remote_repository_path }}
 
 # Public cloud VSM sync interval
-abiquo.vsm.vmsyncfrequency.amazon = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.AMAZON = {{ abiquo_vsm_syncfrequency }}
+abiquo.vsm.vmsyncfrequency.AZURE = {{ abiquo_vsm_syncfrequency }}
 abiquo.vsm.vmsyncfrequency.rackspace-cloudservers-us = {{ abiquo_vsm_syncfrequency }}
 abiquo.vsm.vmsyncfrequency.rackspace-cloudservers-uk = {{ abiquo_vsm_syncfrequency }}
 abiquo.vsm.vmsyncfrequency.digitalocean = {{ abiquo_vsm_syncfrequency }}
@@ -55,7 +56,8 @@ abiquo.vsm.vmsyncfrequency.elastichosts-syd-v = {{ abiquo_vsm_syncfrequency }}
 abiquo.vsm.vmsyncfrequency.elastichosts-tor-p = {{ abiquo_vsm_syncfrequency }}
 
 # Public cloud VSM polling interval
-abiquo.vsm.pollingfrequency.amazon = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.AMAZON = {{ abiquo_vsm_pollingfrequency }}
+abiquo.vsm.pollingfrequency.AZURE = {{ abiquo_vsm_pollingfrequency }}
 abiquo.vsm.pollingfrequency.rackspace-cloudservers-us = {{ abiquo_vsm_pollingfrequency }}
 abiquo.vsm.pollingfrequency.rackspace-cloudservers-uk = {{ abiquo_vsm_pollingfrequency }}
 abiquo.vsm.pollingfrequency.digitalocean = {{ abiquo_vsm_pollingfrequency }}
@@ -71,8 +73,8 @@ abiquo.vsm.pollingfrequency.elastichosts-sjc-c = {{ abiquo_vsm_pollingfrequency 
 abiquo.vsm.pollingfrequency.elastichosts-syd-v = {{ abiquo_vsm_pollingfrequency }}
 abiquo.vsm.pollingfrequency.elastichosts-tor-p = {{ abiquo_vsm_pollingfrequency }}
 
-# DEVEL common properties
 {% if abiquo_devel %}
+# DEVEL common properties
 am.conversions.skip = true
 abiquo.virtualfactory.kvm.fullVirt = false
 abiquo.dvs.vcenter.user = root

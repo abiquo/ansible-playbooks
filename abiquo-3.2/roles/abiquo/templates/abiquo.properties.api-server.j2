@@ -26,5 +26,5 @@ abiquo.server.mail.password = none
 abiquo.server.mail.user = none@none.es
 
 # M identity credentials
-abiquo.m.identity=admin
-abiquo.m.credential=xabiquo
+abiquo.m.identity = default_outbound_api_user
+abiquo.m.credential = {{ abiquo_default_outbound_api_user_password.stdout }}

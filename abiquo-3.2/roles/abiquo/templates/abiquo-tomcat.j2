@@ -23,7 +23,7 @@ export JAVA_HOME="/usr/java/default/"
 
 export TUSER="root"
 export PATH=$PATH:/usr/local/bin
-export JAVA_OPTS=" -server -Xms1024m -Xmx1500m -XX:MaxPermSize=512m -XX:+CMSClassUnloadingEnabled -Djava.awt.headless=true "
+export JAVA_OPTS=" -server -Xms1024m -Xmx1500m -XX:+CMSClassUnloadingEnabled -Djava.awt.headless=true "
 export CATALINA_OPTS="$CATALINA_OPTS -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true"
 
 if ! [ -x $JAVA_HOME/bin/java ]; then

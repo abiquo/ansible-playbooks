@@ -66,6 +66,25 @@
     when: abiquo_security_encrypt
     template: src=store.j2 dest=/etc/abiquo/.store
 
+  - name: Check if kinton database already exists
+    when: abiquo_profile == "monolithic" or abiquo_profile == "api-server"
+    shell: /usr/bin/mysql -e "show databases" | grep -q "kinton"  && echo "False"
+    register: result
+    ignore_errors: True
+
+  - name: Create kinton database
+    when: (abiquo_profile == "monolithic" or abiquo_profile == "api-server") and result|failed
+    shell: /usr/bin/mysql -e "create database kinton"
+
+  - name: Import kinton database schema
+    when: (abiquo_profile == "monolithic" or abiquo_profile == "api-server") and result|failed
+    shell: /usr/bin/mysql kinton < /usr/share/doc/abiquo-server/database/kinton-schema.sql
+
+  - name: Obtain m_user default password
+    when: (abiquo_profile == "monolithic" or abiquo_profile == "api-server")
+    shell: mysql kinton -Nse "select COMMENTS from DATABASECHANGELOG where ID = 'default_user_for_m'"
+    register: abiquo_default_outbound_api_user_password
+
   - name: Ensure abiquo/config folder exists
     file: path=/opt/abiquo/config state=directory
 
@@ -77,20 +96,6 @@
 
   - name: Apply abiquo-tomcat Template
     template: src=abiquo-tomcat.j2 dest=/etc/init.d/abiquo-tomcat
-
-  - name: Check if kinton database already exists
-    when: abiquo_profile == "monolithic" or abiquo_profile == "api-server"
-    shell: /usr/bin/mysql -e "show databases" | grep -q "kinton" && echo "False"
-    register: result
-    ignore_errors: True
-
-  - name: Create kinton database
-    when: (abiquo_profile == "monolithic" or abiquo_profile == "api-server") and result|failed
-    shell: /usr/bin/mysql -e "create database kinton"
-
-  - name: Import kinton database schema
-    when: (abiquo_profile == "monolithic" or abiquo_profile == "api-server") and result|failed
-    shell: /usr/bin/mysql kinton < /usr/share/doc/abiquo-server/database/kinton-schema.sql
 
   - name: Configure client-config.json API endpoint
     when: abiquo_profile == "monolithic" or abiquo_profile == "api-server" 
