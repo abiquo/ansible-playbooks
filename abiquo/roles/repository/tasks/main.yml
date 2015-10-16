@@ -1,0 +1,14 @@
+- name: Install release rpm
+  when: not abiquo_use_repos
+  yum: name={{ abiquo_release_rpm }} state=present
+
+- name: Create Base Repo
+  when: abiquo_use_repos
+  template: src=abiquo-base.j2 dest=/etc/yum.repos.d/abiquo-base.repo
+
+- name: Create Updates Repo
+  when: abiquo_use_repos
+  template: src=abiquo-updates.j2 dest=/etc/yum.repos.d/abiquo-updates.repo
+
+# - name: Yum clean
+#   command: /usr/bin/yum clean all -y

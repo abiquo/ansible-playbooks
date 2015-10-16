@@ -1,0 +1,8 @@
+- name: Start MariaDB Service
+  service: name=mysql state=started enabled=yes
+
+- name: Start RabbitMQ Service
+  service: name=rabbitmq-server state=started enabled=yes
+
+- name: Start Redis Server
+  service: name=redis state=started enabled=yes

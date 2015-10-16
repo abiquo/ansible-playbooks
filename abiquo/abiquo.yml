@@ -1,0 +1,41 @@
+---
+- hosts: database
+  user: root
+  roles:
+    - mariadb
+
+- hosts: redis
+  user: root
+  roles:
+    - redis
+
+- hosts: rabbit
+  user: root
+  roles:
+    - rabbitmq
+
+- hosts: monolithic
+  user: root
+  vars:
+    - abiquo_profile: monolithic
+  roles:
+    - { role: abiquo-server, abiquo_install_commons: true }
+    - jce
+    - properties
+
+- hosts: server
+  user: root
+  roles:
+    - { role: abiquo-server, abiquo_install_commons: true }
+    - { role: properties }
+    - jce
+    - properties
+
+- hosts: remote-services
+  user: root
+  roles:
+    
+- hosts: v2v
+  user: root
+  roles:
+    

@@ -1,0 +1,34 @@
+# Abiquo properties
+abiquo_commons: true
+abiquo_properties:
+  - abiquo.auth.module: abiquo
+  - abiquo.server.sessionTimeout: 60
+  - abiquo.server.api.location: http://localhost:8009/api
+  - abiquo.redis.port: 6379
+  - abiquo.redis.host: 127.0.0.1
+  - abiquo.rabbitmq.port: 5672
+  - abiquo.rabbitmq.host: 127.0.0.1
+  - abiquo.rabbitmq.password: guest
+  - abiquo.server.mail.server: 127.0.0.1
+  - abiquo.server.mail.password: none
+  - abiquo.server.mail.user: none@none.es
+  - abiquo.m.identity: default_outbound_api_user
+  - abiquo.m.credential: "{{ abiquo_default_outbound_api_user_password.stdout }}"
+
+# Apache variables
+abiquo_ssl_enable: true
+
+abiquo_ui_config:
+  - config.endpoint: "{{ abiquuo_ui_protocol.stdout }}://{{ ansible_default_ipv4.address }}/api"
+
+# MySQL vars
+mysql_user: root
+mysql_password: ''
+mysql_host: localhost
+mysql_port: 3306
+
+# Firewall Ports
+abiquo_allowed_ports:
+  - { protocol: tcp, port: 80 }
+  - { protocol: tcp, port: 443 }
+  - { protocol: tcp, port: 8009 }

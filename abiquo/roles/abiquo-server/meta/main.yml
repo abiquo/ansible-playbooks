@@ -1,0 +1,8 @@
+---
+dependencies:
+  - { role: abiquo }
+  - { role: mariadb, when: abiquo_install_commons }
+  - { role: rabbitmq, when: abiquo_install_commons }
+  - { role: redis, when: abiquo_install_commons }
+  - { role: apache, abiquo_api_address: "{{ ansible_default_ipv4.address }}" }
+  - { role: iptables }

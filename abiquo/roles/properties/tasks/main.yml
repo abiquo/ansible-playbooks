@@ -1,0 +1,4 @@
+---
+- name: Generate abiquo.properties file
+  assemble: backup=yes  dest=/opt/abiquo/config/abiquo.properties remote_src=true  src=/var/lib/abiquo-fragments
+  notify: restart abiquo-tomcat

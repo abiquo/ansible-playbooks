@@ -1,0 +1,47 @@
+---
+- name: Install Abiquo packages for an API server
+  yum: name={{ item }} state=present
+  with_items:
+    - abiquo-server
+    - abiquo-sosreport-plugins
+    - abiquo-tutorials
+    - abiquo-websockify
+
+- name: Ensure abiquo/config folder exists
+  file: path=/opt/abiquo/config state=directory
+
+- name: Ensure fragments folder exists
+  file: path=/var/lib/abiquo-fragments state=directory
+
+- name: Ensure MySQL databases are present.
+  mysql_db:
+    name: kinton
+    state: import
+    login_host: "{{ mysql_host }}"
+    login_port: "{{ mysql_port }}"
+    login_user: "{{ mysql_user }}"
+    login_password: "{{ mysql_password }}"
+    target: /usr/share/doc/abiquo-server/database/kinton-schema.sql
+
+- name: Obtain m_user default password
+  shell: mysql kinton -Nse "select COMMENTS from DATABASECHANGELOG where ID = 'default_user_for_m'"
+  register: abiquo_default_outbound_api_user_password
+
+- name: Abiquo properties server fragment
+  template: src=abiquo.properties.j2 dest=/var/lib/abiquo-fragments/server
+
+- name: Set UI as http
+  command: echo http
+  when: not abiquo_ssl_enable
+  register: abiquuo_ui_protocol
+
+- name: Set UI as https
+  command: echo https
+  when: abiquo_ssl_enable
+  register: abiquuo_ui_protocol
+
+- name: Abiquo UI properties
+  template: src=client-config-custom.json.j2 dest=/var/www/html/ui/config/client-config-custom.json
+
+- name: Remove the last comma in the json
+  command: sed -i -n 'x;${s/,$//;p;x}; 2,$ p' /var/www/html/ui/config/client-config-custom.json

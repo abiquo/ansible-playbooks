@@ -1,0 +1,50 @@
+# MariaDB
+# Mysql dependency that needs to be removed in order to install MariaDB
+- name: Remove mysql-libs package
+  when: abiquo_profile == "monolithic" or abiquo_profile == "server"
+  yum: name=mysql-libs state=absent
+
+- name: Install MariaDB
+  when: abiquo_profile == "monolithic" or abiquo_profile == "server"
+  yum: name={{ item }} state=present
+  notify: Start MariaDB Service
+  with_items:
+    - MariaDB-server
+    - MariaDB-client
+
+- name: Ensure cron service is installed
+  yum: name=cronie.x86_64 state=present
+
+# RabbitMQ
+- name: Install RabbitMQ Server
+  when: abiquo_profile == "monolithic" or abiquo_profile == "server"
+  yum: name=rabbitmq-server state=present
+  notify: Start RabbitMQ Service
+
+# Redis
+- name: Install Redis Server
+  when: abiquo_profile == "monolithic" or abiquo_profile == "server" or abiquo_profile == "remote-services"
+  yum: name=redis state=present
+  notify: Start Redis Server
+
+# - name: Create Redis user
+#   when: abiquo_install_commons
+#   user: name=redis createhome=no
+
+# - name: Create Redis data folder
+#   when: abiquo_install_commons
+#   file: path=/var/lib/redis/ owner=redis group=redis state=directory
+
+# - name: Create Redis log folder
+#   when: abiquo_install_commons
+#   file: path=/var/log/redis owner=redis group=redis state=directory
+
+# Apache
+# - name: Install Apache2 httpd Server
+#   when: abiquo_profile == "monolithic" or abiquo_profile == "server" or abiquo_profile == "ui"
+#   yum: name=httpd state=present
+
+# - name: Set Apache2 httpd Service enabled at start up
+#   when: abiquo_profile == "monolithic" or abiquo_profile == "api-server" or abiquo_profile == "ui"
+#   service: name=httpd enabled=yes
+

@@ -1,0 +1,8 @@
+---
+- name: Install Redis
+  yum: name={{ item }} state=present
+  with_items:
+    - redis
+
+- name: Start and enable Redis service
+  service: name=redis state=started enabled=yes

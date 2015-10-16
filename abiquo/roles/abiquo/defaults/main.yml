@@ -1,0 +1,7 @@
+abiquo_version: 3.6
+abiquo_use_repos: false
+abiquo_release_rpm: http://mirror.bcn.abiquo.com/abiquo/3.6/os/x86_64/abiquo-release-ee-internal-3.6.0-4.el6.noarch.rpm
+abiquo_base_repo: http://mirror.bcn.abiquo.com/abiquo/{{ abiquo_version }}/os/x86_64
+abiquo_updates_repo: http://mirror.bcn.abiquo.com/abiquo/{{ abiquo_version }}/updates/x86_64
+abiquo_repository_gpg_check: 0
+abiquo_dns_name: false

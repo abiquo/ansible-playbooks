@@ -1,0 +1,5 @@
+{% for prop in abiquo_properties %}
+{%    for name, value in prop.iteritems() %}
+{{ name }} = {{ value }}
+{%    endfor %}
+{% endfor %}

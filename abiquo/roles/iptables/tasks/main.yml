@@ -1,0 +1,17 @@
+---
+- name: Check if iptables is running
+  shell: /etc/init.d/iptables status > /dev/null 2>&1 ; echo $? | grep -q "0" && echo "True"
+  register: iptables_check
+  ignore_errors: True
+
+- name: Open the correct IPTables ports
+  lineinfile: dest=/etc/sysconfig/iptables
+              regexp="^-A INPUT -p {{item.protocol}} -m {{item.protocol}} --dport {{item.port}} -j ACCEPT$"
+              line="-A INPUT -p {{item.protocol}} -m {{item.protocol}} --dport {{item.port}} -j ACCEPT"
+              insertafter="^:OUTPUT ACCEPT \[\d*:\d*\]$"
+  with_items:
+    - "{{ abiquo_allowed_ports }}"
+
+- name: Restart iptables to load changes
+  when: iptables_check.stdout
+  service: name=iptables state=restarted

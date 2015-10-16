@@ -1,0 +1,3 @@
+---
+- name: restart abiquo-tomcat
+  service: name=abiquo-tomcat state=restarted enabled=yes pattern=tomcat

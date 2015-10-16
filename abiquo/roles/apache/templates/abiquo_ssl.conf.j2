@@ -1,0 +1,44 @@
+<VirtualHost *:80>
+    RewriteEngine On
+    RewriteRule .* https://%{SERVER_NAME}%{REQUEST_URI} [L,R=301]
+</VirtualHost>
+
+<VirtualHost *:443>
+    Servername {{ ansible_fqdn }}
+    Serveralias {{ ansible_hostname }}
+    RewriteEngine On
+    ProxyRequests Off
+    ProxyPreserveHost On
+ 
+    <Directory "/var/www/html/ui">
+        Options MultiViews FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+    RewriteRule ^/$ /ui/ [R]
+ 
+ 
+    <Location /api>
+        ProxyPass ajp://{{ abiquo_api_address }}:8010/api/ timeout={{ api_timeout }}
+        ProxyPassReverse ajp://{{ abiquo_api_address }}:8010/api/
+    </Location>
+
+{% if abiquo_profile == "monolithic" %}
+    <Location /am>
+        ProxyPass ajp://{{ abiquo_api_address }}:8010/am/ timeout={{ am_timeout }}
+        ProxyPassReverse ajp://{{ abiquo_api_address }}:8010/am/
+    </Location>
+{% endif %}
+ 
+    <Location /legal/>
+        ProxyPass ajp://{{ abiquo_api_address }}:8010/legal/
+        ProxyPassReverse ajp://{{ abiquo_api_address }}:8010/legal/
+    </Location>
+
+SSLEngine on
+SSLProtocol all -SSLv2 -SSLv3
+SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:!MEDIUM:!LOW
+SSLCertificateFile /etc/pki/httpd/server.crt
+SSLCertificateKeyFile /etc/pki/httpd/server.key 
+</VirtualHost>
