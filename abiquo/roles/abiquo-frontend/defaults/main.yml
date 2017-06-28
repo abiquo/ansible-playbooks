@@ -1,0 +1,27 @@
+---
+ui_server_name: "{{ansible_fqdn}}"
+ui_server_alias: "{{ansible_hostname}}"
+ui_proxy_timeout: 3600
+ui_apache_opts: {}
+ui_proxies: {}
+
+ui_cert_file: /etc/pki/abiquo/{{ansible_fqdn}}.crt
+ui_cert_key_file: /etc/pki/abiquo/{{ansible_fqdn}}.key
+# ui_cert_ca_file: ...
+
+ui_config:
+  - config.endpoint: ""
+
+haproxy_listen_address: "*"
+haproxy_listen_port: 41337
+haproxy_cert_file: /etc/pki/abiquo/{{ansible_fqdn}}.haproxy.crt
+haproxy_paths:
+  default:
+    servers:
+      - 127.0.0.1:41338
+
+# Firewall Ports
+abiquo_allowed_ports:
+  - { protocol: tcp, port: 80 }
+  - { protocol: tcp, port: 443 }
+  - { protocol: tcp, port: "{{ haproxy_listen_port }}" }

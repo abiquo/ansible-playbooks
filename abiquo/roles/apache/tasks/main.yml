@@ -5,19 +5,9 @@
     - httpd
     - mod_ssl
 
-- name: Create cert dir
-  file: path=/etc/pki/httpd/ state=directory
-
-- name: create self-signed SSL cert
-  command: openssl req -new -nodes -x509 -subj "/C=ES/ST=Barcelona/L=Barcelona/O=Support/CN=${ansible_fqdn}" -days 3650 -keyout /etc/pki/httpd/server.key -out /etc/pki/httpd/server.crt -extensions v3_ca creates=/etc/pki/httpd/server.crt
-
-- name: Apache Abiquo config
-  template: backup=yes  dest=/etc/httpd/conf.d/abiquo.conf src=abiquo.conf.j2
-  when: not abiquo_ssl_enable
-
 - name: Apache Abiquo SSL config
-  template: backup=yes  dest=/etc/httpd/conf.d/abiquo.conf src=abiquo_ssl.conf.j2
-  when: abiquo_ssl_enable
+  template: backup=yes dest=/etc/httpd/conf.d/abiquo.conf src=abiquo_ssl.conf.j2
+  notify: restart httpd
 
 - name: Set Apache2 httpd Service enabled at start up
   service: name=httpd enabled=yes state=started

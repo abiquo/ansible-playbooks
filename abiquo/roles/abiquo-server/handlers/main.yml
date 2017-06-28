@@ -1,3 +1,6 @@
-- name: restart httpd
-  service: name=httpd state=restarted
+- name: restart abiquo-tomcat
+  service: name=abiquo-tomcat state=restarted
 
+- name: liquibase update
+  command: abiquo-liquibase -h {{ abiquo_db_host }} -u {{ abiquo_db_user }} -p {{ abiquo_db_pass }} -P {{ abiquo_db_port }} update
+  notify: restart abiquo-tomcat

@@ -1,0 +1,16 @@
+---
+- name: Install Abiquo packages for an V2V server
+  yum: name={{ item }} state=present
+  with_items:
+    - abiquo-v2v
+    - abiquo-sosreport-plugins
+    - jdk
+
+- name: Ensure abiquo/config folder exists
+  file: path=/opt/abiquo/config state=directory
+
+- name: Ensure fragments folder exists
+  file: path=/var/lib/abiquo-fragments state=directory
+
+- name: Abiquo V2V server fragment
+  template: src=abiquo.properties.j2 dest=/var/lib/abiquo-fragments/v2v

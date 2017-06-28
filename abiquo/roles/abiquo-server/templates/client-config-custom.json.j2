@@ -1,7 +1,0 @@
-{
-{% for item in abiquo_ui_config %}
-{%    for k, v in item.iteritems() %}
-  "{{ k }}": "{{ v }}",
-{%    endfor %}
-{% endfor %}
-}

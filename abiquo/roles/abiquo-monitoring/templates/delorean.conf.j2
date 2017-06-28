@@ -1,0 +1,80 @@
+####################################
+# Delorean application config file #
+####################################
+
+delorean {
+    numberOfEvaluateAlarmWorkers : 10,
+    alarmEvaluateWorkersParallelism : 2, 
+    alarmPublisherMaxBufferSize : 20,
+    
+    kairosOperationTimeoutMs : 30000,
+    sqlOperationTimeoutMs : 30000,
+    
+    database {
+        url : "jdbc:mysql://{{ abiquo_monitoring_db_host }}:{{ abiquo_monitoring_db_port }}/watchtower",
+        username : "{{ abiquo_monitoring_db_user }}",
+        password : "{{ abiquo_monitoring_db_pass }}"
+    },
+    
+    kairosdb {
+        host : "{{ abiquo_monitoring_kairosdb_address }}",
+        port : {{ abiquo_monitoring_kairosdb_port }}
+    },
+
+    amqp {
+        alarmEvaluationExchange : "watchtower.alarms.evaluation",
+        alarmEvaluationRoutingKey : "watchtower.alarm.evaluation",
+        alarmEvaluationQueue : "watchtower.alarm.evaluation"
+        alarmNotificationExchange : "watchtower.alarms.notification",
+        alarmNotificationRoutingKey : "watchtower.alarm.notificacion",
+    }
+}
+
+amqp.rabbitmq {
+    # The known broker host
+    host : "{{ abiquo_monitoring_rabbitmq_address }}",
+        
+    # The known broker port
+    port : {{ abiquo_monitoring_rabbitmq_port }},
+
+    # User name to use when connecting to the broker
+    username : "{{ abiquo_monitoring_rabbitmq_username }}",
+
+    # Password to use when connecting to the broker
+    password : "{{ abiquo_monitoring_rabbitmq_password }}",
+
+    # Virtual host to use when connecting to the broker.
+    virtualHost : "/",
+
+    # How long will automatic recovery wait before attempting to reconnect, in milliseconds
+    networkRecoveryInterval : 5000,
+
+    # TCP connection timeout, in milliseconds. Zero for infinite
+    connectionTimeout : 0,
+
+    # The initially requested heartbeat timeout, in seconds
+    # http://rabbitmq.com/heartbeats.html
+    requestedHeartBeat : 0
+}
+
+akka {
+    loglevel = "INFO",
+    log-dead-letters = 10,
+    log-dead-letters-during-shutdown = on,
+    
+    actor {
+        debug {
+            # All AutoReceiveMessages (Kill, PoisonPill, etc)
+            autorecive = off,
+            
+            # Detailed logging of all lifecycle changes of Actors (restarts, deaths, etc)
+            lifecycle = off,
+            
+            # Unhandled messages
+            unhandled = on,
+            
+            # Monitor subscriptions (subscribe/unsubscribe) on the ActorSystem.eventStreams
+            event-stream = off
+        }
+    }
+}

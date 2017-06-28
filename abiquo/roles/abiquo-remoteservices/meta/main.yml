@@ -1,0 +1,5 @@
+---
+dependencies:
+  - { role: abiquo }
+  - { role: redis, when: abiquo_install_services }
+  # - { role: iptables }

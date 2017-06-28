@@ -1,0 +1,36 @@
+---
+abiquo_install_services: true
+
+# KairosDB
+abiquo_monitoring_kairosdb_address: localhost
+abiquo_monitoring_kairosdb_port: 8080
+
+# RabbitMQ
+abiquo_monitoring_rabbitmq_address: localhost
+abiquo_monitoring_rabbitmq_port: 5672
+abiquo_monitoring_rabbitmq_username: abiquo
+abiquo_monitoring_rabbitmq_password: abiquo
+
+# Database
+abiquo_monitoring_db_user: abiquo
+abiquo_monitoring_db_pass: abiquo
+abiquo_monitoring_db_host: localhost
+abiquo_monitoring_db_port: 3306
+abiquo_monitoring_db_from: 'localhost'
+
+# Cassandra
+cassandra_cluster_name: abiquo
+cassandra_rpc_port: 9160
+cassandra_rpc_address: "{{ ansible_default_ipv4.address }}"
+
+# KairosDB
+kairosdb_rpm_url: https://github.com/kairosdb/kairosdb/releases/download/v0.9.4/kairosdb-0.9.4-6.rpm
+kairosdb_config_file_path: /opt/kairosdb/conf/kairosdb.properties
+kariosdb_cassandra_rpc_port: 9160
+kariosdb_cassandra_rpc_address: "{{ ansible_default_ipv4.address }}"
+
+# Firewall Ports
+abiquo_server_allowed_ports:
+  - { protocol: tcp, port: 80 }
+  - { protocol: tcp, port: 443 }
+  - { protocol: tcp, port: 8009 }

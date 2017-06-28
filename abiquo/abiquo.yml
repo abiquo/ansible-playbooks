@@ -14,28 +14,48 @@
   roles:
     - rabbitmq
 
+- hosts: frontend
+  user: root
+  vars:
+    - abiquo_profile: frontend
+  roles:
+    - { role: abiquo-frontend }
+
+- hosts: server
+  user: root
+  roles:
+    - { role: abiquo-server }
+    - jce
+    - properties
+
+- hosts: remoteservices
+  user: root
+  roles:
+    - { role: abiquo-remoteservices, abiquo_install_commons: true }
+    - jce
+    - properties
+
 - hosts: monolithic
   user: root
   vars:
     - abiquo_profile: monolithic
   roles:
+    - { role: abiquo-frontend }
     - { role: abiquo-server, abiquo_install_commons: true }
+    - { role: abiquo-remoteservices, abiquo_install_commons: true }
+    - { role: abiquo-v2v, abiquo_install_commons: true }
     - jce
     - properties
-
-- hosts: server
-  user: root
-  roles:
-    - { role: abiquo-server, abiquo_install_commons: true }
-    - { role: properties }
-    - jce
-    - properties
-
-- hosts: remote-services
-  user: root
-  roles:
     
 - hosts: v2v
   user: root
   roles:
-    
+    - abiquo-v2v
+    - jce
+    - properties
+
+- hosts: monitoring
+  user: root
+  roles:
+    - abiquo-monitoring
+    - jce

@@ -1,0 +1,48 @@
+####################################
+# Delorean application config file #
+####################################
+
+emmett {
+    database {
+        url : "jdbc:mysql://{{ abiquo_monitoring_db_host }}:{{ abiquo_monitoring_db_port }}/watchtower",
+        username : "{{ abiquo_monitoring_db_user }}",
+        password : "{{ abiquo_monitoring_db_pass }}"
+    }
+    
+    kairosdb {
+        host : "{{ abiquo_monitoring_kairosdb_address }}",
+        port : {{ abiquo_monitoring_kairosdb_port }}
+    }
+
+    amqp {
+        alarmEvaluationExchange : "watchtower.alarms.evaluation",
+        alarmEvaluationRoutingKey : "watchtower.alarm.evaluation"
+    }
+}
+
+amqp.rabbitmq {
+    # The known broker host
+    host : "{{ abiquo_monitoring_rabbitmq_address }}",
+
+    # The known broker port
+    port : {{ abiquo_monitoring_rabbitmq_port }},
+
+    # User name to use when connecting to the broker
+    username : "{{ abiquo_monitoring_rabbitmq_username }}",
+
+    # Password to use when connecting to the broker
+    password : "{{ abiquo_monitoring_rabbitmq_password }}",
+
+    # Virtual host to use when connecting to the broker.
+    virtualHost : "/",
+    
+    # How long will automatic recovery wait before attempting to reconnect, in milliseconds
+    networkRecoveryInterval : 5000,
+    
+    # TCP connection timeout, in milliseconds. Zero for infinite
+    connectionTimeout : 0,
+    
+    # The initially requested heartbeat timeout, in seconds
+    # http://rabbitmq.com/heartbeats.html
+    requestedHeartBeat : 0
+}

@@ -1,0 +1,12 @@
+---
+- name: restart emmett
+  service: name=abiquo-emmett state=restarted
+
+- name: restart delorean
+  service: name=abiquo-delorean state=restarted
+
+- name: liquibase watchtower
+  command: abiquo-watchtower-liquibase -h {{ abiquo_db_host }} -u {{ abiquo_db_user }} -p {{ abiquo_db_pass }} -P {{ abiquo_db_port }} update
+  notify: 
+    - restart emmett
+    - restart delorean

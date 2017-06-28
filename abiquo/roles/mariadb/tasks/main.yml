@@ -8,3 +8,23 @@
 
 - name: Start and enable MariaDB service
   service: name=mysql state=started enabled=yes
+
+- name: Create kinton DB user
+  mysql_user:
+    name: "{{ abiquo_db_user }}"
+    password: "{{ abiquo_db_pass }}"
+    host: "{{ abiquo_db_from }}"
+    priv: "kinton.*:ALL/kinton_accounting.*:ALL"
+    login_user: root
+    login_password: ''
+  when: abiquo_db_user is defined 
+
+- name: Create watchtower DB user
+  mysql_user:
+    name: "{{ abiquo_monitoring_db_user }}"
+    password: "{{ abiquo_monitoring_db_pass }}"
+    host: "{{ abiquo_monitoring_db_from }}"
+    priv: "watchtower.*:ALL"
+    login_user: root
+    login_password: ''
+  when: abiquo_monitoring_db_user is defined

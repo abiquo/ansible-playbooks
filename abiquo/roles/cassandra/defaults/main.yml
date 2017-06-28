@@ -1,0 +1,4 @@
+---
+cassandra_cluster_name: cassandra
+cassandra_rpc_port: 9160
+cassandra_rpc_address: "{{ ansible_default_ipv4.address }}"

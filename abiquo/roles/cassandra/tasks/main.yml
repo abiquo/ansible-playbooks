@@ -1,0 +1,26 @@
+- name: Datastax Cassandra repository
+  yum_repository:
+    name: datastax
+    description: DataStax Repo for Apache Cassandra
+    file: datastax
+    baseurl: http://rpm.datastax.com/community
+    gpgcheck: 0
+    enabled: yes
+
+- name: Install Cassandra required packages
+  yum: name={{ item }} state=present
+  with_items:
+    - dsc22
+    - jdk
+
+# Update /etc/hosts required to boot Cassandra
+- name: Update /etc/hosts
+  lineinfile: dest=/etc/hosts regexp="^{{ ansible_default_ipv4.address }}" line='{{ ansible_default_ipv4.address }} {{ ansible_nodename }} {{ ansible_hostname }}'
+
+- name: Applying Cassandra configuration template
+  template: src=cassandra.yaml.j2 dest=/etc/cassandra/default.conf/cassandra.yaml
+  notify:
+    - restart cassandra
+
+- name: Start Cassandra service
+  service: name=cassandra state=started enabled=yes

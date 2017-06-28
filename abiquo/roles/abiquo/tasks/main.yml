@@ -2,23 +2,42 @@
 - name: Install libselinux-python
   yum: name=libselinux-python state=present
 
+- name: Selinux state
+  command: getenforce
+  register: selinux_state
+
 - name: Set Disbale selinux
-  selinux: conf=/etc/selinux/config policy=disabled  state=disabled  
+  selinux: conf=/etc/selinux/config policy=disabled  state=disabled
 
 - name: Disable selinux
   command: setenforce 0
+  when: selinux_state.stdout != "Disabled"
+
+- name: Create Abiquo repos
+  command: /bin/true
+  notify:
+    - Create Base Repo
+    - Create Updates Repo
+    - Clear cache after repo modification
+
+- name: Run handlers create
+  meta: flush_handlers
 
 - name: Install release rpm
-  when: not abiquo_use_repos
-  yum: name={{ abiquo_release_rpm }} state=present
+  yum: name=abiquo-release-ee state=present disable_gpg_check=yes
 
-- name: Create Base Repo
-  when: abiquo_use_repos
-  template: src=abiquo-base.j2 dest=/etc/yum.repos.d/abiquo-base.repo
+- name: Update Abiquo repos
+  command: /bin/true
+  notify:
+    - Create Base Repo
+    - Create Updates Repo
+    - Clear cache after repo modification
 
-- name: Create Updates Repo
-  when: abiquo_use_repos
-  template: src=abiquo-updates.j2 dest=/etc/yum.repos.d/abiquo-updates.repo
+- name: Run handlers update
+  meta: flush_handlers
+
+- name: Add EPEL repository
+  yum: name=epel-release state=present
 
 - name: Update /etc/hosts
   template: src=hosts.j2 dest=/etc/hosts

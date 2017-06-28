@@ -6,8 +6,13 @@
     - unzip
 
 - name: Download Oracle Java 1.8 JCE package from Oracle web site
-  command: curl -L --cookie 'oraclelicense=accept-securebackup-cookie;' http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip
-     -o jce_policy-8.zip chdir=/tmp
+  get_url: 
+    url: http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip
+    dest: /tmp/jce_policy-8.zip
+    headers: "Cookie:oraclelicense=accept-securebackup-cookie;"
 
 - name: Extract Oracle Java 1.8 JCE to destination path
-  command: unzip -jo /tmp/jce_policy-8.zip -d /usr/java/default/jre/lib/security/
+  unarchive:
+    remote_src: True
+    src: /tmp/jce_policy-8.zip
+    dest: /usr/java/default/jre/lib/security/

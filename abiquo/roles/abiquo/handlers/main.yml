@@ -1,0 +1,23 @@
+---
+- name: Create Base Repo
+  yum_repository:
+    name: abiquo-base
+    description: Abiquo base packages
+    file: abiquo-base
+    baseurl: "{{ abiquo_base_repo }}"
+    gpgcheck: "{{ abiquo_repository_gpg_check }}"
+    gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-RSA-KEY-Abiquo
+    enabled: yes
+
+- name: Create Updates Repo
+  yum_repository:
+    name: abiquo-updates
+    description: Abiquo update packages
+    file: abiquo-updates
+    baseurl: "{{ abiquo_updates_repo }}"
+    gpgcheck: "{{ abiquo_repository_gpg_check }}"
+    gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-RSA-KEY-Abiquo
+    enabled: yes
+
+- name: Clear cache after repo modification
+  command: yum --disablerepo=* --enablerepo=abiquo-base,abiquo-updates clean all

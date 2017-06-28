@@ -4,11 +4,17 @@
 </VirtualHost>
 
 <VirtualHost *:443>
-    Servername {{ ansible_fqdn }}
-    Serveralias {{ ansible_hostname }}
+    Servername {{ ui_server_name }}
+    Serveralias {{ ui_server_alias }}
+    DocumentRoot "/var/www/html"
     RewriteEngine On
     ProxyRequests Off
     ProxyPreserveHost On
+    ProxyTimeout {{ ui_proxy_timeout }}
+
+{% for opt, val in ui_apache_opts.iteritems() %}
+    {{ opt }} {{ val }}
+{% endfor %}
  
     <Directory "/var/www/html/ui">
         Options MultiViews FollowSymLinks
@@ -17,28 +23,25 @@
         Allow from all
     </Directory>
     RewriteRule ^/$ /ui/ [R]
- 
- 
-    <Location /api>
-        ProxyPass ajp://{{ abiquo_api_address }}:8010/api/ timeout={{ api_timeout }}
-        ProxyPassReverse ajp://{{ abiquo_api_address }}:8010/api/
-    </Location>
 
-{% if abiquo_profile == "monolithic" %}
-    <Location /am>
-        ProxyPass ajp://{{ abiquo_api_address }}:8010/am/ timeout={{ am_timeout }}
-        ProxyPassReverse ajp://{{ abiquo_api_address }}:8010/am/
-    </Location>
+{% for proxy, val in ui_proxies.iteritems() %}
+    <Location {{ proxy }}>
+        ProxyPass {{ val.url }}
+        ProxyPassReverse {{ val.url }}
+{% if val.options is defined %}
+{% for option, val in val.options.iteritems() %}
+        {{ opt }} {{ val }}
+{% endfor %}
 {% endif %}
- 
-    <Location /legal/>
-        ProxyPass ajp://{{ abiquo_api_address }}:8010/legal/
-        ProxyPassReverse ajp://{{ abiquo_api_address }}:8010/legal/
     </Location>
+{% endfor %}
 
-SSLEngine on
-SSLProtocol all -SSLv2 -SSLv3
-SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:!MEDIUM:!LOW
-SSLCertificateFile /etc/pki/httpd/server.crt
-SSLCertificateKeyFile /etc/pki/httpd/server.key 
+    SSLEngine on
+    SSLProtocol All -SSLv2 -SSLv3
+    SSLCipherSuite EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH
+    SSLCertificateFile {{ ui_cert_file }}
+    SSLCertificateKeyFile {{ ui_cert_key_file }}
+{% if ui_cert_ca_file is defined %}
+    SSLCACertificateFile {{ ui_cert_ca_file }}
+{% endif %}
 </VirtualHost>

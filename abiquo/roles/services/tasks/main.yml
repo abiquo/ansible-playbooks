@@ -1,0 +1,9 @@
+---
+- include_role:
+    name: redis
+
+- include_role:
+    name: mariadb
+
+- include_role:
+    name: rabbitmq

@@ -1,0 +1,4 @@
+- name: restart kairosdb
+  service: name=kariosdb state=restarted
+  # command: /etc/init.d/kairosdb restart
+#  Service seems to fail running locally

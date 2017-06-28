@@ -1,0 +1,7 @@
+---
+dependencies:
+  - { role: abiquo }
+  - { role: cassandra }
+  - { role: kairosdb }
+  - { role: mariadb, when: abiquo_install_services }
+  # - { role: iptables }

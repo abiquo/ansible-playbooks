@@ -1,0 +1,24 @@
+---
+- name: Install Abiquo packages for an Abiquo frontend
+  yum: name={{ item }} state=present
+  with_items:
+    - abiquo-ui
+    - abiquo-tutorials
+
+- name: Create cert dir
+  file: path=/etc/pki/abiquo/ state=directory
+
+- name: create self-signed SSL cert
+  command: openssl req -new -nodes -x509 -subj "/C=ES/ST=Barcelona/L=Barcelona/O=Support/CN={{ansible_fqdn}}" -days 3650 -keyout /etc/pki/abiquo/{{ansible_fqdn}}.key -out /etc/pki/abiquo/{{ansible_fqdn}}.crt -extensions v3_ca creates=/etc/pki/abiquo/{{ansible_fqdn}}.crt
+
+- name: create self-signed SSL cert for HAproxy
+  shell: cat /etc/pki/abiquo/{{ansible_fqdn}}.crt /etc/pki/abiquo/{{ansible_fqdn}}.key > /etc/pki/abiquo/{{ansible_fqdn}}.haproxy.crt creates=/etc/pki/abiquo/{{ansible_fqdn}}.haproxy.crt
+
+- name: Abiquo UI properties
+  template: src=client-config-custom.json.j2 dest=/var/www/html/ui/config/client-config-custom.json
+
+- include_role:
+    name: apache
+
+- include_role:
+    name: haproxy

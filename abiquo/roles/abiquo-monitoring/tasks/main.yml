@@ -1,0 +1,37 @@
+---
+- name: Install Abiquo packages for a monitoring server
+  yum: name={{ item }} state=present
+  with_items:
+    - abiquo-emmett
+    - abiquo-delorean
+    - abiquo-sosreport-plugins
+
+- name: Create watchtower schema.
+  mysql_db:
+    name: watchtower
+    state: present
+    login_host: "{{ abiquo_monitoring_db_host }}"
+    login_port: "{{ abiquo_monitoring_db_port }}"
+    login_user: "{{ abiquo_monitoring_db_user }}"
+    login_password: "{{ abiquo_monitoring_db_pass }}"
+  register: watchtower_created
+
+- name: Ensure MySQL databases are present.
+  mysql_db:
+    name: watchtower
+    state: import
+    login_host: "{{ abiquo_monitoring_db_host }}"
+    login_port: "{{ abiquo_monitoring_db_port }}"
+    login_user: "{{ abiquo_monitoring_db_user }}"
+    login_password: "{{ abiquo_monitoring_db_pass }}"
+    target: /usr/share/doc/abiquo-watchtower/database/src/watchtower-1.0.0.sql
+  when: watchtower_created.changed
+  notify: liquibase watchtower
+
+- name: Abiquo Emmett config file
+  template: src=emmett.conf.j2 dest=/etc/abiquo/watchtower/emmett.conf
+  notify: restart emmett
+
+- name: Abiquo Delorean config file
+  template: src=delorean.conf.j2 dest=/etc/abiquo/watchtower/delorean.conf
+  notify: restart delorean
